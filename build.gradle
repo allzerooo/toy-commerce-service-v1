@@ -5,6 +5,10 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.7' apply false
 }
 
+ext {
+	set('springCloudVersion', "2025.0.0")
+}
+
 subprojects {
 	group = 'com.toy'
 	description = 'Commerce Platform'
@@ -31,6 +35,13 @@ subprojects {
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 		testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
 		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	}
+
+	// 공통 Spring Cloud BOM
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		}
 	}
 
 	// 공통 Kotlin 설정
