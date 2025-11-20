@@ -1,0 +1,11 @@
+version = '0.0.1-SNAPSHOT'
+description = 'api-gateway-reactive'
+
+dependencies {
+    implementation 'io.projectreactor.kotlin:reactor-kotlin-extensions'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway-server-webflux'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test'
+}
