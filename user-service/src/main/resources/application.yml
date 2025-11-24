@@ -16,7 +16,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-
+    show-sql: true
+    generate-ddl: true
 
 eureka:
   instance:
