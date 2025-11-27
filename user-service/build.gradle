@@ -1,9 +1,19 @@
 plugins {
 	id 'org.jetbrains.kotlin.plugin.jpa' version '2.2.21'
+	id 'org.asciidoctor.jvm.convert' version '4.0.5'
 }
 
 version = '0.0.1-SNAPSHOT'
 description = 'user-service'
+
+asciidoctorj {
+	// Spring REST Docs 4.0.0 이 요구하는 버전
+	version = '3.0.0'
+}
+
+configurations {
+	asciidoctorExt
+}
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -14,11 +24,49 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'io.mockk:mockk:1.14.6'
+	testImplementation 'com.ninja-squad:springmockk:4.0.2'
+	testImplementation 'org.springframework.boot:spring-boot-restdocs'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
 allOpen {
 	annotation 'jakarta.persistence.Entity'
 	annotation 'jakarta.persistence.MappedSuperclass'
 	annotation 'jakarta.persistence.Embeddable'
+}
+
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+
+test {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	configurations 'asciidoctorExt'
+	dependsOn test
+
+	sourceDir 'src/docs/asciidoc'
+
+	attributes 'snippets': snippetsDir
+}
+
+tasks.register('copyDocument', Copy) {
+	dependsOn asciidoctor
+	from asciidoctor.outputDir
+	into file("src/main/resources/static/docs")
+}
+
+bootRun {
+	dependsOn copyDocument
+}
+
+bootJar {
+	dependsOn copyDocument
 }
