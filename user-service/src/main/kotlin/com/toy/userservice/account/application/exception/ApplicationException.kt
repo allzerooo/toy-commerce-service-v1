@@ -19,3 +19,8 @@ class UserPersistenceException(
     message: String = "사용자 저장에 실패했습니다.",
     cause: Throwable? = null
 ) : ApplicationException(message, cause)
+
+class InvalidCredentialsException(
+    message: String = "이메일 또는 비밀번호가 올바르지 않습니다.",
+    cause: Throwable? = null
+) : ApplicationException(message, cause)

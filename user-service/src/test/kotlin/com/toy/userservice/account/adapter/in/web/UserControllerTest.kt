@@ -2,8 +2,11 @@ package com.toy.userservice.account.adapter.`in`.web
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
+import com.toy.userservice.account.adapter.`in`.web.request.LoginRequest
 import com.toy.userservice.account.adapter.`in`.web.request.RegisterUserRequest
+import com.toy.userservice.account.application.port.`in`.LoginUseCase
 import com.toy.userservice.account.application.port.`in`.RegisterUserUseCase
+import com.toy.userservice.account.application.port.`in`.TokenPair
 import com.toy.userservice.account.domain.model.*
 import io.mockk.every
 import org.junit.jupiter.api.Test
@@ -36,6 +39,9 @@ class UserControllerTest {
 
     @MockkBean
     lateinit var registerUserUseCase: RegisterUserUseCase
+
+    @MockkBean
+    lateinit var loginUseCase: LoginUseCase
 
     @Test
     fun `회원가입 API 문서화`() {
@@ -189,6 +195,98 @@ class UserControllerTest {
                             .type(JsonFieldType.STRING)
                             .description("사용자 역할")
                     )
+                )
+            )
+    }
+
+    @Test
+    fun `로그인 API 문서화`() {
+        // given
+        val request = LoginRequest(
+            email = "test@example.com",
+            password = "Test1234!@#$"
+        )
+
+        val mockTokenPair = TokenPair(
+            accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            refreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyfQ.4Adcj0vGXH1C7RQWFX5V9ViJmUqGqZ1pN7DqZWiLQxo"
+        )
+
+        every { loginUseCase.execute(any()) } returns mockTokenPair
+
+        // when & then
+        mockMvc.perform(
+            post("/api/v1/users/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.data.accessToken").exists())
+            .andExpect(jsonPath("$.data.refreshToken").exists())
+            .andExpect(jsonPath("$.data.tokenType").value("Bearer"))
+            .andDo(
+                document(
+                    "user-login",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestFields(
+                        fieldWithPath("email")
+                            .type(JsonFieldType.STRING)
+                            .description("사용자 이메일 주소"),
+                        fieldWithPath("password")
+                            .type(JsonFieldType.STRING)
+                            .description("비밀번호")
+                    ),
+                    responseFields(
+                        fieldWithPath("success")
+                            .type(JsonFieldType.BOOLEAN)
+                            .description("API 처리 성공 여부"),
+                        fieldWithPath("code")
+                            .type(JsonFieldType.STRING)
+                            .description("응답 코드"),
+                        fieldWithPath("message")
+                            .type(JsonFieldType.STRING)
+                            .description("응답 메시지"),
+                        fieldWithPath("data")
+                            .type(JsonFieldType.OBJECT)
+                            .description("응답 데이터"),
+                        fieldWithPath("data.accessToken")
+                            .type(JsonFieldType.STRING)
+                            .description("액세스 토큰 (유효기간: 1시간)"),
+                        fieldWithPath("data.refreshToken")
+                            .type(JsonFieldType.STRING)
+                            .description("리프레시 토큰 (유효기간: 7일)"),
+                        fieldWithPath("data.tokenType")
+                            .type(JsonFieldType.STRING)
+                            .description("토큰 타입 (Bearer)"),
+                        fieldWithPath("timestamp")
+                            .type(JsonFieldType.STRING)
+                            .description("응답 생성 시각 (ISO-8601 형식)")
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun `로그인 실패 - 이메일 누락`() {
+        // given
+        val invalidRequest = mapOf(
+            "password" to "Test1234!@#$"
+        )
+
+        // when & then
+        mockMvc.perform(
+            post("/api/v1/users/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest))
+        )
+            .andExpect(status().isBadRequest)
+            .andDo(
+                document(
+                    "user-login-fail-missing-email",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint())
                 )
             )
     }
