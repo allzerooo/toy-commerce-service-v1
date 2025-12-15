@@ -9,7 +9,7 @@ import java.time.Instant
 data class UserResponse(
     val id: String,
     val email: String,
-    val roles: List<String>,
+    val role: String,
     val status: String,
     val createdAt: Instant
 ) {
@@ -20,7 +20,7 @@ data class UserResponse(
         fun from(user: User): UserResponse = UserResponse(
             id = user.id.toString(),
             email = user.email.value,
-            roles = user.roles.map { it.name },
+            role = user.role.name,
             status = user.status.name,
             createdAt = user.createdAt
         )

@@ -17,58 +17,9 @@ class UserTest {
         assertThat(user.id).isNotNull()
         assertThat(user.email.value).isEqualTo("test@example.com")
         assertThat(user.status).isEqualTo(UserStatus.ACTIVE)
-        assertThat(user.roles)
-            .contains(UserRole.BUYER)
-            .hasSize(1)
+        assertThat(user.role).isEqualTo(UserRole.BUYER)
         assertThat(user.createdAt).isNotNull()
         assertThat(user.isActive()).isTrue()
-    }
-
-    @Test
-    fun `판매자 역할 추가`() {
-        val user = createTestUser()
-        assertThat(user.isSeller()).isFalse()
-
-        user.addRole(UserRole.SELLER)
-
-        assertThat(user.isSeller()).isTrue()
-        assertThat(user.roles)
-            .contains(UserRole.BUYER, UserRole.SELLER)
-            .hasSize(2)
-        assertThat(user.hasRole(UserRole.BUYER)).isTrue()
-        assertThat(user.hasRole(UserRole.SELLER)).isTrue()
-    }
-
-    @Test
-    fun `관리자 역할 추가`() {
-        val user = createTestUser()
-        assertThat(user.isAdmin()).isFalse()
-
-        user.addRole(UserRole.ADMIN)
-
-        assertThat(user.isAdmin()).isTrue()
-        assertThat(user.roles).hasSize(2)
-    }
-
-    @Test
-    fun `판매자 역할 제거`() {
-        val user = createTestUser()
-        user.addRole(UserRole.SELLER)
-        assertThat(user.isSeller()).isTrue()
-
-        user.removeRole(UserRole.SELLER)
-
-        assertThat(user.isSeller()).isFalse()
-        assertThat(user.roles).hasSize(1)
-    }
-
-    @Test
-    fun `역할은 최소 1개 이상`() {
-        val user = createTestUser()
-
-        assertThatThrownBy {
-            user.removeRole(UserRole.BUYER)
-        }.isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
@@ -113,7 +64,7 @@ class UserTest {
             id = user1.id,
             email = Email.of("other@example.com"),
             password = EncodedPassword.of("other_password"),
-            roles = setOf(UserRole.BUYER, UserRole.SELLER),
+            role = UserRole.BUYER,
             status = UserStatus.ACTIVE,
             createdAt = user1.createdAt,
             updatedAt = user1.updatedAt

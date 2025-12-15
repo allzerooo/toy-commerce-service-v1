@@ -51,7 +51,7 @@ class RegisterUserServiceTest {
         // then
         assertThat(result.email.value).isEqualTo("test@example.com")
         assertThat(result.password.value).isEqualTo("encodedPassword123")
-        assertThat(result.roles).contains(UserRole.BUYER)
+        assertThat(result.role).isEqualTo(UserRole.BUYER)
         assertThat(result.status).isEqualTo(UserStatus.ACTIVE)
         assertThat(result.id).isNotNull()
         assertThat(result.createdAt).isNotNull()
@@ -101,7 +101,7 @@ class RegisterUserServiceTest {
         verify(exactly = 1) { userCommandPort.registerUser(any()) }
         assertThat(userSlot.captured.email.value).isEqualTo("test@example.com")
         assertThat(userSlot.captured.password.value).isEqualTo("encodedPassword123")
-        assertThat(userSlot.captured.roles).contains(UserRole.BUYER)
+        assertThat(userSlot.captured.role).isEqualTo(UserRole.BUYER)
         assertThat(userSlot.captured.status).isEqualTo(UserStatus.ACTIVE)
     }
 
@@ -124,7 +124,7 @@ class RegisterUserServiceTest {
         // then
         assertThat(result.email.value).isEqualTo("seller@example.com")
         assertThat(result.password.value).isEqualTo("encodedSellerPassword")
-        assertThat(result.roles).contains(UserRole.SELLER)
+        assertThat(result.role).isEqualTo(UserRole.SELLER)
         assertThat(result.isSeller()).isTrue()
     }
 
