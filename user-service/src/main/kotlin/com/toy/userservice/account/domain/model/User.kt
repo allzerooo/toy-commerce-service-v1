@@ -8,15 +8,14 @@ import java.time.Instant
 class User private constructor(
     val id: UserId,
     val email: Email,
+    val role: UserRole,
     private var _password: EncodedPassword,
-    private var _roles: MutableSet<UserRole>,
     private var _status: UserStatus,
     val createdAt: Instant,
     private var _updatedAt: Instant
 ) {
 
     val password: EncodedPassword get() = _password
-    val roles: Set<UserRole> get() = _roles.toSet()
     val status: UserStatus get() = _status
     val updatedAt: Instant get() = _updatedAt
 
@@ -34,7 +33,7 @@ class User private constructor(
                 id = UserId.generate(),
                 email = email,
                 _password = encodedPassword,
-                _roles = mutableSetOf(role),
+                role = role,
                 _status = UserStatus.ACTIVE,
                 createdAt = now,
                 _updatedAt = now
@@ -48,7 +47,7 @@ class User private constructor(
             id: UserId,
             email: Email,
             password: EncodedPassword,
-            roles: Set<UserRole>,
+            role: UserRole,
             status: UserStatus,
             createdAt: Instant,
             updatedAt: Instant
@@ -56,7 +55,7 @@ class User private constructor(
             id = id,
             email = email,
             _password = password,
-            _roles = roles.toMutableSet(),
+            role = role,
             _status = status,
             createdAt = createdAt,
             _updatedAt = updatedAt
@@ -72,44 +71,19 @@ class User private constructor(
     }
 
     /**
-     * 역할 추가 (예: 판매자 등록)
-     */
-    fun addRole(role: UserRole) {
-        if (_roles.add(role)) {
-            _updatedAt = Instant.now()
-        }
-    }
-
-    /**
-     * 역할 제거
-     */
-    fun removeRole(role: UserRole) {
-        require(_roles.size > 1) { "최소 1개의 역할은 유지해야 합니다." }
-        require(_roles.contains(role)) { "보유하지 않은 역할입니다: $role" }
-
-        _roles.remove(role)
-        _updatedAt = Instant.now()
-    }
-
-    /**
-     * 특정 역할을 가지고 있는지 확인
-     */
-    fun hasRole(role: UserRole): Boolean = _roles.contains(role)
-
-    /**
      * 구매자인지 확인
      */
-    fun isBuyer(): Boolean = hasRole(UserRole.BUYER)
+    fun isBuyer(): Boolean = role == UserRole.BUYER
 
     /**
      * 판매자인지 확인
      */
-    fun isSeller(): Boolean = hasRole(UserRole.SELLER)
+    fun isSeller(): Boolean = role == UserRole.SELLER
 
     /**
      * 관리자인지 확인
      */
-    fun isAdmin(): Boolean = hasRole(UserRole.ADMIN)
+    fun isAdmin(): Boolean = role == UserRole.ADMIN
 
     /**
      * 계정 비활성화
@@ -140,7 +114,7 @@ class User private constructor(
 
     override fun hashCode(): Int = id.hashCode()
 
-    override fun toString(): String = "User(id=$id, email=$email, roles=$roles, status=$status)"
+    override fun toString(): String = "User(id=$id, email=$email, role=$role, status=$status)"
 }
 
 /**

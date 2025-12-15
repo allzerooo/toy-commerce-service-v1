@@ -1,0 +1,26 @@
+# 테스트 전용 설정
+spring:
+  application:
+    name: user-service-test
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    generate-ddl: true
+
+# 테스트용 JWT 설정
+jwt:
+  secret: test-secret-key-for-testing-must-be-at-least-32-characters-long
+  access-token-expiration: 1h
+  refresh-token-expiration: 14d
+  issuer: user-service-test
+
+# Eureka 비활성화 (테스트 시 외부 의존성 제거)
+eureka:
+  client:
+    enabled: false

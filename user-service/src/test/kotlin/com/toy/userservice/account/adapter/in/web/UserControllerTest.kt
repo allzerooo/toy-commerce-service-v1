@@ -50,7 +50,7 @@ class UserControllerTest {
             id = UserId.generate(),
             email = Email.of("test@example.com"),
             password = EncodedPassword.of("encoded-password-hash"),
-            roles = setOf(UserRole.BUYER),
+            role = UserRole.BUYER,
             status = UserStatus.ACTIVE,
             createdAt = Instant.parse("2024-01-01T00:00:00Z"),
             updatedAt = Instant.parse("2024-01-01T00:00:00Z")
@@ -102,9 +102,9 @@ class UserControllerTest {
                         fieldWithPath("data.email")
                             .type(JsonFieldType.STRING)
                             .description("사용자 이메일"),
-                        fieldWithPath("data.roles")
-                            .type(JsonFieldType.ARRAY)
-                            .description("사용자 역할 목록"),
+                        fieldWithPath("data.role")
+                            .type(JsonFieldType.STRING)
+                            .description("사용자 역할"),
                         fieldWithPath("data.status")
                             .type(JsonFieldType.STRING)
                             .description("사용자 상태 (ACTIVE: 활성, INACTIVE: 비활성, SUSPENDED: 정지)"),

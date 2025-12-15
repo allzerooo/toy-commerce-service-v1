@@ -62,14 +62,9 @@ class UserJpaEntity(
     var password: String = password
         protected set
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-        name = "user_roles",
-        joinColumns = [JoinColumn(name = "user_id")]
-    )
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    var roles: MutableSet<UserRole> = mutableSetOf(role)
+    var role: UserRole = role
         protected set
 
     @Enumerated(EnumType.STRING)
@@ -95,7 +90,7 @@ class UserJpaEntity(
             uuid = id.value,
             email = email.value,
             password = password.value,
-            role = roles.firstOrNull() ?: throw UserRoleRequiredException(),
+            role = role,
             userStatus = status,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -109,7 +104,7 @@ class UserJpaEntity(
         id = UserId.from(UUID.fromString(uuid.toString())),
         email = Email.of(email),
         password = EncodedPassword.of(password),
-        roles = roles.toSet(),
+        role = role,
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt
@@ -120,7 +115,7 @@ class UserJpaEntity(
      */
     fun update(user: User) {
         this.password = user.password.value
-        this.roles = user.roles.toMutableSet()
+        this.role = user.role
         this.status = user.status
         this.updatedAt = user.updatedAt
     }
