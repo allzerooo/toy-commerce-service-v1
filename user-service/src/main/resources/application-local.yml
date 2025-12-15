@@ -19,6 +19,12 @@ spring:
     show-sql: true
     generate-ddl: true
 
+jwt:
+  secret: your-256-bit-secret-key-here-must-be-at-least-32-characters-long # HMAC-SHA256 사용 시 최소 256비트(32바이트) 이상 필요
+  access-token-expiration: 1h
+  refresh-token-expiration: 14d
+  issuer: user-service
+
 eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
