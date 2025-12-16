@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 /**
  * Spring Security 설정 클래스
@@ -19,7 +20,9 @@ import org.springframework.security.web.SecurityFilterChain
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(JwtProperties::class)
-class SecurityConfig {
+class SecurityConfig(
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter
+) {
 
     /** local/dev 프로파일에서만 동작하도록 제한 */
     @Bean
@@ -35,7 +38,7 @@ class SecurityConfig {
             }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/api/v1/users", "/api/v1/users/login").permitAll()
+                    .requestMatchers("/api/v1/users").permitAll()
                     .requestMatchers("/h2-console/**").permitAll()
                     .requestMatchers("/docs/**").permitAll()
                     .anyRequest().authenticated()
@@ -43,6 +46,7 @@ class SecurityConfig {
             .headers { headers ->
                 headers.frameOptions { it.disable() }
             }
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
     }
 }
