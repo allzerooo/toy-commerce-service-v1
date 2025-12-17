@@ -1,4 +1,4 @@
-package com.toy.userservice.account.adapter.`in`.web.common.security
+package com.toy.userservice.account.adapter.infrastructure.auth
 
 import com.toy.userservice.account.domain.model.Email
 import com.toy.userservice.account.domain.model.EncodedPassword

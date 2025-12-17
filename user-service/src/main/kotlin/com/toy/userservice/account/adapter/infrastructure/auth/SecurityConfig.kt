@@ -1,4 +1,4 @@
-package com.toy.userservice.account.adapter.`in`.web.common.security
+package com.toy.userservice.account.adapter.infrastructure.auth
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean

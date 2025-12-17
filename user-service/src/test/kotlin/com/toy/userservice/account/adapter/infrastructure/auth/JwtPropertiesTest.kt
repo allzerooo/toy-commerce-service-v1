@@ -1,4 +1,4 @@
-package com.toy.userservice.account.adapter.`in`.web.common.security
+package com.toy.userservice.account.adapter.infrastructure.auth
 
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
