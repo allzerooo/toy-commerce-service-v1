@@ -1,4 +1,4 @@
-package com.toy.userservice.account.adapter.infrastructure.security
+package com.toy.userservice.account.adapter.infrastructure.auth
 
 import com.toy.userservice.account.adapter.out.persistence.jpa.UserJpaRepository
 import com.toy.userservice.account.domain.model.Email

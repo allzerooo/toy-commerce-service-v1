@@ -1,4 +1,4 @@
-package com.toy.userservice.account.adapter.infrastructure.security
+package com.toy.userservice.account.adapter.infrastructure.auth
 
 import com.toy.userservice.account.domain.model.User
 import org.springframework.security.core.GrantedAuthority
