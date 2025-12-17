@@ -1,4 +1,4 @@
-package com.toy.userservice.account.adapter.`in`.web.common.security
+package com.toy.userservice.account.adapter.infrastructure.security
 
 import com.toy.userservice.account.domain.model.User
 import io.github.oshai.kotlinlogging.KotlinLogging

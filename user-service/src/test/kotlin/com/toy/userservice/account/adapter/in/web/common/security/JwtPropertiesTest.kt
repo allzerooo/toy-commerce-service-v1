@@ -1,5 +1,6 @@
 package com.toy.userservice.account.adapter.`in`.web.common.security
 
+import com.toy.userservice.account.adapter.infrastructure.security.JwtProperties
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

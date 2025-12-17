@@ -1,4 +1,4 @@
-package com.toy.userservice.account.adapter.`in`.web.common.security
+package com.toy.userservice.account.adapter.infrastructure.security
 
 import com.toy.userservice.account.adapter.out.persistence.jpa.UserJpaRepository
 import com.toy.userservice.account.domain.model.Email
@@ -27,7 +27,7 @@ class CustomUserDetailsService(
 
     override fun loadUserByUsername(username: String): UserDetails {
         val email = try {
-            Email.of(username)
+            Email.Companion.of(username)
         } catch (e: IllegalArgumentException) {
             throw UsernameNotFoundException("유효하지 않은 이메일 형식입니다: $username")
         }

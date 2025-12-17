@@ -1,4 +1,4 @@
-package com.toy.userservice.account.adapter.`in`.web.common.security
+package com.toy.userservice.account.adapter.infrastructure.security
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.time.Duration
