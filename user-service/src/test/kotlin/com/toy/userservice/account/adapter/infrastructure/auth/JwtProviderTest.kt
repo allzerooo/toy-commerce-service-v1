@@ -1,7 +1,5 @@
-package com.toy.userservice.account.adapter.`in`.web.common.security
+package com.toy.userservice.account.adapter.infrastructure.auth
 
-import com.toy.userservice.account.adapter.infrastructure.security.JwtProperties
-import com.toy.userservice.account.adapter.infrastructure.security.JwtProvider
 import com.toy.userservice.account.domain.model.Email
 import com.toy.userservice.account.domain.model.EncodedPassword
 import com.toy.userservice.account.domain.model.User
